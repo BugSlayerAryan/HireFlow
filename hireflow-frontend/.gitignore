@@ -1,0 +1,26 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# IntelliJ
+.idea/
+*.iml
+
+# Java
+target/
+*.log
+
+# React
+node_modules/
+dist/
+
+# Uploaded files
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local secrets
+application-local.properties

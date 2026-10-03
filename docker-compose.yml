@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hireflow-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hireflow_ai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./hireflow-ai-backend/hireflow-ai-backend
+      dockerfile: Dockerfile
+    container_name: hireflow-backend
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireflow_ai
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      JWT_SECRET: ${JWT_SECRET:-HireFlowAI_SuperSecure_JWT_Secret_Key_256Bits!!}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.8-flash}
+      HIREFLOW_UPLOAD_DIR: /app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./hireflow-frontend
+      dockerfile: Dockerfile
+    container_name: hireflow-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

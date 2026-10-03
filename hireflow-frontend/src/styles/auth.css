@@ -1,0 +1,234 @@
+/* =====================================================
+   CLEAN PROFESSIONAL AUTHENTICATION STYLING
+   ===================================================== */
+
+.auth-bg {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.auth-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    /* Neutral dark overlay for readability */
+    z-index: 1;
+}
+
+/* Floating mesh hidden when using background images */
+.auth-bg-mesh {
+    display: none;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    position: relative;
+    color: #1e293b;
+}
+
+.auth-title {
+    font-size: 2.5rem;
+    font-weight: 850;
+    color: #0f172a;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.75rem;
+    text-align: center;
+    background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.auth-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Modern Role Selector */
+.role-switch {
+    display: flex;
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 14px;
+    margin-bottom: 2.25rem;
+    border: 1px solid #e2e8f0;
+}
+
+.role-switch button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px 6px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.role-switch button.active {
+    background: white;
+    color: #4f46e5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* Link Style */
+.auth-footer-text {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.auth-footer-text a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.auth-footer-text a:hover {
+    background: rgba(79, 70, 229, 0.08);
+}
+
+.form-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #334155;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-control {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1rem !important;
+    color: #1e293b !important;
+}
+
+.form-control:focus {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2) !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.3) !important;
+}
+/* ===== Responsive auth refresh + dark mode ===== */
+.auth-bg-modern {
+    background:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, .28), transparent 32%),
+        radial-gradient(circle at 85% 20%, rgba(14, 165, 233, .22), transparent 30%),
+        linear-gradient(145deg, #0f172a, #172554 55%, #312e81);
+}
+
+.auth-theme-toggle {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 20;
+}
+
+.auth-theme-toggle .btn-icon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(15,23,42,.45);
+    color: white;
+    backdrop-filter: blur(12px);
+}
+
+.auth-card {
+    background: color-mix(in srgb, var(--card-bg) 94%, transparent);
+    border-color: color-mix(in srgb, var(--glass-border) 70%, white 30%);
+    color: var(--text-main);
+    box-shadow: var(--shadow-xl);
+}
+
+.auth-brand-mark {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 12px;
+    border-radius: 15px;
+    background: var(--grad-primary);
+    color: white;
+    font-size: 1.25rem;
+    box-shadow: 0 12px 28px rgba(99,102,241,.28);
+}
+
+.auth-title { margin-bottom: .35rem; }
+.auth-subtitle, .auth-footer-text { color: var(--text-muted); }
+.role-switch { background: var(--surface-2); border-color: var(--glass-border); }
+.role-switch button { color: var(--text-muted); }
+.role-switch button.active { background: var(--card-bg); color: var(--primary-color); border-color: var(--glass-border); }
+
+.auth-input-wrap { position: relative; }
+.auth-input-wrap > i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    z-index: 2;
+}
+.auth-input-wrap .form-control { padding-left: 2.6rem !important; }
+.auth-submit { min-height: 50px; }
+
+[data-theme='dark'] .auth-card { background: rgba(15,23,42,.94); border-color: #334155; }
+[data-theme='dark'] .auth-title { color: #f8fafc; }
+
+@media (max-width: 575px) {
+    .auth-bg { padding: 1rem; align-items: flex-start; padding-top: 5rem; }
+    .auth-card { padding: 1.5rem; border-radius: 18px; }
+    .role-switch { flex-direction: column; }
+}
+
+.auth-card .form-control {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-main) !important;
+}
+.auth-card .form-label { color: var(--text-main) !important; }
+[data-theme='dark'] .auth-card .form-control { background: #0b1220 !important; }
