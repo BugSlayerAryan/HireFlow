@@ -1,10 +1,8 @@
 package com.hireflow_ai_backend.config;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,73 +17,64 @@ public class AdminSeeder implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Value("${ADMIN_EMAIL:}")
+    private String adminEmail;
+
+    @Value("${ADMIN_INITIAL_PASSWORD:}")
+    private String adminPassword;
+
+    public AdminSeeder(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        System.out.println("🛠️ Starting Admin & Database Sync...");
+    public void run(String... args) {
 
-        try {
-            // 1. CLEAR DUPLICATES
-            List<User> allUsers = userRepository.findAll();
-            Set<String> seenEmails = new HashSet<>();
-            for (User user : allUsers) {
-                String email = user.getEmail().toLowerCase().trim();
-                if (seenEmails.contains(email)) {
-                    System.out.println("❌ Deleting duplicate: " + email);
-                    userRepository.delete(user);
-                } else {
-                    seenEmails.add(email);
-                }
-            }
+        System.out.println("Starting Admin initialization...");
 
-            // 2. FORCE ADMIN RESET
-            String adminEmail = "admin@hireflow.com";
-            Optional<User> adminOpt = userRepository.findByEmailIgnoreCase(adminEmail);
+        if (adminEmail == null || adminEmail.isBlank()
+                || adminPassword == null || adminPassword.isBlank()) {
 
-            User admin;
-            if (adminOpt.isEmpty()) {
-                System.out.println("✨ Creating fresh Admin: " + adminEmail);
-                admin = new User();
-                admin.setEmail(adminEmail);
-                admin.setName("System Admin");
-                admin.setRole(Role.ADMIN);
-            } else {
-                System.out.println("🔄 Resetting existing Admin password to admin123...");
-                admin = adminOpt.get();
-            }
+            System.out.println(
+                    "Admin initialization skipped. ADMIN_EMAIL or ADMIN_INITIAL_PASSWORD missing."
+            );
 
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setSkills("Admin, Security");
-            userRepository.save(admin);
-
-            // 3. SEED TEST USERS
-            seedUserIfMissing("hariomjawarkar@gmail.com", "Hariom J", Role.JOB_SEEKER);
-            seedUserIfMissing("hr@gmail.com", "HR Recruiter", Role.RECRUITER);
-
-            System.out.println("✅ Database is ready.");
-        } catch (Exception e) {
-            System.err.println("❌ ERROR during Admin seeding: " + e.getMessage());
+            return;
         }
 
-        long count = userRepository.count();
-        System.out.println("📊 Total users in database found: " + count);
-        System.out.println("✅ Database sync complete.");
-    }
+        String normalizedEmail =
+                adminEmail.trim().toLowerCase();
 
-    private void seedUserIfMissing(String email, String name, Role role) {
-        if (userRepository.findByEmailIgnoreCase(email).isEmpty()) {
-            User user = new User();
-            user.setEmail(email);
-            user.setName(name);
-            user.setRole(role);
-            user.setPassword(passwordEncoder.encode("admin123"));
-            user.setSkills("Java, Spring Boot, React");
-            userRepository.save(user);
-            System.out.println("✨ Created test user: " + email);
+        Optional<User> existingAdmin =
+                userRepository.findByEmailIgnoreCase(normalizedEmail);
+
+        if (existingAdmin.isPresent()) {
+
+            System.out.println(
+                    "Admin already exists. Existing password was NOT changed."
+            );
+
+            return;
         }
+
+        User admin = new User();
+
+        admin.setName("System Admin");
+        admin.setEmail(normalizedEmail);
+        admin.setPassword(
+                passwordEncoder.encode(adminPassword)
+        );
+        admin.setRole(Role.ADMIN);
+        admin.setSkills("Admin, Security");
+
+        userRepository.save(admin);
+
+        System.out.println(
+                "Initial admin account created successfully."
+        );
     }
 }
