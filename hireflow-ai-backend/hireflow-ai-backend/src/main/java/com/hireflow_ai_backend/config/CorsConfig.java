@@ -31,7 +31,8 @@ public class CorsConfig {
 				"http://127.0.0.1:5177",
 				"http://127.0.0.1:5178",
 				"http://127.0.0.1:5179",
-				"https://*.vercel.app"));
+				"https://*.vercel.app",
+				"https://hireflow-three-pi.vercel.app"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setExposedHeaders(List.of("Authorization"));
