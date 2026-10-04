@@ -1,13 +1,12 @@
 import { Navigate } from "react-router-dom";
-import { getDefaultRouteForRole, isRoleAllowed } from "../utils/auth";
+import { getDefaultRouteForRole, getStoredSession, isRoleAllowed } from "../utils/auth";
 
 export default function RoleRoute({ children, allowedRoles }) {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const session = getStoredSession();
 
-  if (!token) return <Navigate to="/login" replace />;
-  if (!isRoleAllowed(role, allowedRoles)) {
-    return <Navigate to={getDefaultRouteForRole(role)} replace />;
+  if (!session) return <Navigate to="/login" replace />;
+  if (!isRoleAllowed(session.role, allowedRoles)) {
+    return <Navigate to={getDefaultRouteForRole(session.role)} replace />;
   }
 
   return children;

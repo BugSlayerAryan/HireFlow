@@ -1,68 +1,63 @@
-const CACHE_NAME = 'hireflow-static-v2';
-const APP_ASSETS = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/vite.svg'
-];
+const CACHE_NAME = "hireflow-static-v4";
+const APP_SHELL = ["/", "/index.html", "/manifest.json"];
 
-// Install Event - Caching basic assets
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(APP_ASSETS))
-            .then(() => self.skipWaiting())
-    );
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
+  );
 });
 
-// Activate Event - Cleaning old caches
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cache => {
-                    if (cache !== CACHE_NAME) {
-                        return caches.delete(cache);
-                    }
-                })
-            );
-        })
-    );
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then((names) => Promise.all(
+        names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+      )),
+      self.clients.claim(),
+    ])
+  );
 });
 
-// Fetch Event - Stale-While-Revalidate Strategy
-self.addEventListener('fetch', event => {
-    // Skip non-GET requests, API calls, chrome extensions, and LOCALHOST during development
-    if (event.request.method !== 'GET' ||
-        event.request.url.includes('/api/') ||
-        event.request.url.startsWith('chrome-extension') ||
-        event.request.url.includes('google-analytics') ||
-        event.request.url.includes('localhost') ||
-        event.request.url.includes('127.0.0.1')) {
-        return;
-    }
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
 
+  const url = new URL(request.url);
+
+  // Never proxy/cache API, SockJS/WebSocket traffic, or third-party resources.
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/ws-hireflow")) {
+    return;
+  }
+
+  // SPA navigations: network first, cached index.html as an offline fallback.
+  if (request.mode === "navigate") {
     event.respondWith(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.match(event.request).then(response => {
-                const fetchPromise = fetch(event.request).then(networkResponse => {
-                    if (networkResponse && networkResponse.status === 200) {
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                }).catch(err => {
-                    console.warn('[SW] Fetch failed:', err);
-                    // Do not return undefined, let the catch handle it or return a fallback
-                    return response; // Return the cached response if fetch fails
-                });
-
-                // If we have a cached response, return it, otherwise wait for fetch
-                // Ensure we ALWAYS return a promise that resolves to a Response or at least doesn't throw
-                return response || fetchPromise;
-            });
-        }).catch(() => {
-            // Emergency fallback if cache access fails
-            return fetch(event.request);
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+          }
+          return response;
         })
+        .catch(async () => (await caches.match("/index.html")) || Response.error())
     );
+    return;
+  }
+
+  // Same-origin static assets: cached response first, refresh in the background.
+  event.respondWith(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cached = await cache.match(request);
+      const network = fetch(request)
+        .then((response) => {
+          if (response.ok) cache.put(request, response.clone());
+          return response;
+        })
+        .catch(() => cached || Response.error());
+      return cached || network;
+    })
+  );
 });

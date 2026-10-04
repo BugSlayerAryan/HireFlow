@@ -6,7 +6,7 @@ import axiosInstance from "../api/axiosInstance";
 import { assetUrl } from "../utils/assets";
 import "../styles/dashboard.css";
 
-export default function TopNavbar() {
+export default function TopNavbar({ onMenuToggle = () => {} }) {
   const navigate = useNavigate();
   const role = localStorage.getItem("role") || "USER";
   const [userName, setUserName] = useState(localStorage.getItem("userName") || "Candidate");
@@ -44,6 +44,9 @@ export default function TopNavbar() {
   return (
     <header className="top-navbar">
       <div className="topbar-title-group">
+        <button type="button" className="mobile-menu-button" onClick={onMenuToggle} aria-label="Open navigation">
+          <i className="bi bi-list"></i>
+        </button>
         <div className="topbar-product-icon"><i className="bi bi-stars"></i></div>
         <div>
           <h6 className="mb-0">HireFlow AI</h6>

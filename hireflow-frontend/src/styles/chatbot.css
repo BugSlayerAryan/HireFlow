@@ -438,3 +438,41 @@
 .input-wrapper:focus-within { background: var(--input-bg); }
 .chatbot-input { color: var(--text-main); }
 .chatbot-input::placeholder { color: var(--text-muted); }
+
+/* Responsive assistant */
+@media (max-width: 767.98px) {
+    .chatbot-anchor {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .chatbot-trigger {
+        width: 56px;
+        height: 56px;
+    }
+
+    .chatbot-window {
+        position: fixed;
+        right: 10px;
+        left: 10px;
+        bottom: 80px;
+        width: auto;
+        height: min(640px, calc(100dvh - 100px));
+        max-height: calc(100dvh - 100px);
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .chatbot-window {
+        inset: 8px 8px 76px 8px;
+        height: auto;
+        max-height: none;
+        border-radius: 16px;
+    }
+
+    .chatbot-header,
+    .chatbot-input-area {
+        padding: 14px;
+    }
+}

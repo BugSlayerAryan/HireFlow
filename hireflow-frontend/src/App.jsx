@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +23,10 @@ import Profile from "./pages/Profile";
 import Interviews from "./pages/Interviews";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import RoleRoute from "./routes/RoleRoute";
+import GuestRoute from "./routes/GuestRoute";
 import useWebSocket from "./hooks/useWebSocketHook";
+import { getDefaultRouteForRole, getStoredSession } from "./utils/auth";
+import "./styles/responsive.css";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -44,16 +48,32 @@ const rolePage = (roles, page) => (
 );
 
 function App() {
-  const userEmail = localStorage.getItem("userEmail");
-  useWebSocket(userEmail);
+  const [session, setSession] = useState(() => getStoredSession());
+
+  useEffect(() => {
+    const refreshSession = () => setSession(getStoredSession());
+    window.addEventListener("hireflow-auth-changed", refreshSession);
+    window.addEventListener("storage", refreshSession);
+    return () => {
+      window.removeEventListener("hireflow-auth-changed", refreshSession);
+      window.removeEventListener("storage", refreshSession);
+    };
+  }, []);
+
+  useWebSocket(session?.userEmail || "");
 
   return (
     <BrowserRouter>
       <AnimatePresence mode="wait">
         <Routes>
-          <Route path="/" element={<PageTransition><Landing /></PageTransition>} />
-          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-          <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+          <Route
+            path="/"
+            element={session
+              ? <Navigate to={getDefaultRouteForRole(session.role)} replace />
+              : <PageTransition><Landing /></PageTransition>}
+          />
+          <Route path="/login" element={<GuestRoute><PageTransition><Login /></PageTransition></GuestRoute>} />
+          <Route path="/register" element={<GuestRoute><PageTransition><Register /></PageTransition></GuestRoute>} />
 
           <Route path="/dashboard" element={protectedPage(<Dashboard />)} />
           <Route path="/dashboard/jobs" element={protectedPage(<Jobs />)} />
@@ -73,7 +93,7 @@ function App() {
           <Route path="/admin/jobs" element={rolePage(["ADMIN"], <AllJobs />)} />
           <Route path="/admin/reports" element={rolePage(["ADMIN"], <AdminReports />)} />
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to={session ? getDefaultRouteForRole(session.role) : "/login"} replace />} />
         </Routes>
       </AnimatePresence>
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import ThemeToggle from "../components/ThemeToggle";
-import { getDefaultRouteForRole, normalizeRole } from "../utils/auth";
+import { getDefaultRouteForRole, normalizeRole, saveAuthSession } from "../utils/auth";
 import "../styles/auth.css";
 
 export default function Login() {
@@ -27,12 +27,14 @@ export default function Login() {
       const { token, role: backendRole, name, userId, profileImageUrl } = res.data;
       const normalizedRole = normalizeRole(backendRole);
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", normalizedRole);
-      localStorage.setItem("userName", name || "User");
-      localStorage.setItem("userId", String(userId ?? ""));
-      localStorage.setItem("userEmail", email.trim());
-      if (profileImageUrl) localStorage.setItem("profileImageUrl", profileImageUrl);
+      saveAuthSession({
+        token,
+        role: normalizedRole,
+        name,
+        userId,
+        email: email.trim(),
+        profileImageUrl,
+      });
 
       toast.success(`Welcome back, ${name || "User"}`);
       navigate(getDefaultRouteForRole(normalizedRole), { replace: true });
