@@ -428,7 +428,7 @@ export default function Users() {
                 "
             >
 
-                <table className="table">
+                <table className="table mobile-card-table admin-users-table">
 
                     <thead>
 
@@ -476,6 +476,7 @@ export default function Users() {
 
                                         <td
                                             className="ps-4"
+                                            data-label="User Details"
                                         >
 
                                             <div
@@ -567,6 +568,7 @@ export default function Users() {
                                             className="
                                                     text-muted
                                                 "
+                                            data-label="Email Address"
                                         >
 
                                             {user.email}
@@ -576,7 +578,7 @@ export default function Users() {
 
                                         {/* ROLE */}
 
-                                        <td>
+                                        <td data-label="Platform Role">
 
                                                 <span
                                                     className={
@@ -606,6 +608,7 @@ export default function Users() {
                                                     text-end
                                                     pe-4
                                                 "
+                                            data-label="Status"
                                         >
 
                                             <div

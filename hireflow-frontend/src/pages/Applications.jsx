@@ -50,7 +50,7 @@ export default function Applications() {
             </div>
 
             <div className="glass-table-container fade-in mt-3">
-                <table className="table">
+                <table className="table mobile-card-table recruiter-applications-table">
                     <thead>
                         <tr>
                             <th className="ps-4">Candidate</th>
@@ -64,7 +64,7 @@ export default function Applications() {
                     <tbody>
                         {applications.map((app) => (
                             <tr key={app.id}>
-                                <td className="ps-4">
+                                <td className="ps-4" data-label="Candidate">
                                     <div className="d-flex align-items-center gap-3">
                                         <div className="avatar bg-primary text-white" style={{ width: '40px', height: '40px', fontSize: '1rem', borderRadius: '12px' }}>
                                             {app.user?.name?.charAt(0)}
@@ -75,14 +75,14 @@ export default function Applications() {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Position & Intent">
                                     <div className="fw-700 text-primary">{app.job?.title}</div>
                                     <div className="text-muted small d-flex flex-column">
                                         <span>Applied {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'Just now'}</span>
                                     </div>
                                 </td>
-                                <td>
-                                    <div className="d-flex align-items-center gap-2">
+                                <td data-label="AI Match">
+                                    <div className="d-flex align-items-center gap-2 mobile-match-row">
                                         <div className="progress flex-grow-1" style={{ height: '8px', width: '80px', borderRadius: '10px' }}>
                                             <div
                                                 className={`progress-bar ${app.matchScore > 80 ? 'bg-success' : app.matchScore > 50 ? 'bg-primary' : 'bg-warning'}`}
@@ -92,12 +92,12 @@ export default function Applications() {
                                         <span className={`fw-900 ${app.matchScore > 80 ? 'text-success' : 'text-primary'}`}>{app.matchScore}%</span>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Status">
                                     <span className={`badge-pill ${statusBadge(app.status)}`}>
                                         {app.status}
                                     </span>
                                 </td>
-                                <td className="text-end pe-4">
+                                <td className="text-end pe-4" data-label="Decision">
                                     {app.status === "APPLIED" ? (
                                         <div className="d-flex justify-content-end gap-2">
                                             <button

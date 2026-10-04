@@ -47,3 +47,14 @@ npm run dev
 ```
 
 Do not copy the old `node_modules` folder between Windows/Linux machines; run `npm install` on the machine where you run the project.
+
+## 2026-10 Mobile responsiveness update
+
+- Login role selector stays horizontal on mobile (Job Seeker / Recruiter / Admin).
+- Login card/input sizing adjusted for narrow phones and avoids mobile input zoom.
+- Admin Users table becomes readable mobile cards instead of a wide desktop table.
+- Admin All Listings table becomes readable mobile cards.
+- Recruiter Review Applications becomes mobile cards with wrapped decision controls and match score layout.
+- Job Seeker My Journey / My Applications becomes mobile cards with status/actions that fit phone widths.
+- Admin dashboard cards and quick actions receive extra mobile wrapping/padding safeguards.
+- Desktop and tablet table layouts are preserved.

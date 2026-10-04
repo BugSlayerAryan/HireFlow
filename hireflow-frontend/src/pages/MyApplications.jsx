@@ -34,7 +34,7 @@ export default function MyApplications() {
             </div>
 
             <div className="glass-table-container fade-in mt-3">
-                <table className="table">
+                <table className="table mobile-card-table my-applications-table">
                     <thead>
                         <tr>
                             <th className="ps-4">Applied Position</th>
@@ -47,7 +47,7 @@ export default function MyApplications() {
                     <tbody>
                         {applications.map((app) => (
                             <tr key={app.id}>
-                                <td className="ps-4">
+                                <td className="ps-4" data-label="Applied Position">
                                     <div className="d-flex align-items-center gap-3">
                                         <div className="avatar bg-blue-soft text-primary" style={{ width: '40px', height: '40px', borderRadius: '12px' }}>
                                             <i className="bi bi-briefcase"></i>
@@ -58,16 +58,16 @@ export default function MyApplications() {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Company">
                                     <div className="fw-600 text-primary">{app.job?.company}</div>
                                 </td>
-                                <td>
+                                <td data-label="AI Score">
                                     <span className={`fw-800 ${app.matchScore > 80 ? 'text-success' : 'text-primary'}`}>
                                         {app.matchScore}%
                                     </span>
                                 </td>
-                                <td className="text-end pe-4">
-                                    <div className="d-flex align-items-center justify-content-end gap-2">
+                                <td className="text-end pe-4" data-label="Status">
+                                    <div className="d-flex align-items-center justify-content-end gap-2 mobile-status-actions">
                                         <button
                                             className="btn btn-xs btn-outline-primary border-0"
                                             onClick={() => window.dispatchEvent(new CustomEvent('openChatbot', {

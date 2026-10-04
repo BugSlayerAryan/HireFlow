@@ -38,7 +38,7 @@ export default function AllJobs() {
             </div>
 
             <div className="glass-table-container fade-in mt-4">
-                <table className="table">
+                <table className="table mobile-card-table admin-jobs-table">
                     <thead>
                         <tr>
                             <th className="ps-4">Job Identification</th>
@@ -51,7 +51,7 @@ export default function AllJobs() {
                     <tbody>
                         {jobs.map((job) => (
                             <tr key={job.id}>
-                                <td className="ps-4">
+                                <td className="ps-4" data-label="Job Identification">
                                     <div className="d-flex align-items-center gap-3">
                                         <div className="avatar bg-primary text-white" style={{ width: '40px', height: '40px', borderRadius: '12px' }}>
                                             <i className="bi bi-briefcase"></i>
@@ -62,16 +62,16 @@ export default function AllJobs() {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Company">
                                     <div className="fw-600 text-primary">{job.company}</div>
                                 </td>
-                                <td>
+                                <td data-label="Location">
                                     <span className="text-muted">
                                         <i className="bi bi-geo-alt me-1"></i>{job.location}
                                     </span>
                                 </td>
-                                <td className="text-end pe-4">
-                                    <div className="d-flex align-items-center justify-content-end gap-3">
+                                <td className="text-end pe-4" data-label="Verification">
+                                    <div className="d-flex align-items-center justify-content-end gap-3 mobile-status-actions">
                                         <span className="badge-pill bg-green-soft text-success border small">
                                             Live Listing
                                         </span>

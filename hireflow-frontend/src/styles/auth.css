@@ -222,7 +222,11 @@
 @media (max-width: 575px) {
     .auth-bg { padding: 1rem; align-items: flex-start; padding-top: 5rem; }
     .auth-card { padding: 1.5rem; border-radius: 18px; }
-    .role-switch { flex-direction: column; }
+    .role-switch {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+    }
 }
 
 .auth-card .form-control {
